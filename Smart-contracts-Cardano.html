@@ -829,8 +829,10 @@ before effecting a change on the distributed ledger</td>
 </table>
 <p><span id="CIP31"></p>
 <div style="border: 1px solid #999; padding: 10px; background-color: lightgrey;">
+  
 <h3>
-Reference input
+  <a id="CIP31">
+Reference input</a>
 </h3>
 <p>
 Since the Vasil hardfork, CIP-31 <span class="citation">(Peyton Jones
@@ -884,8 +886,8 @@ implies that if we want to associate any information to an address, we
 must build a utxo targetted at that address, containing that info.</p>
 <p><span id="CIP33"></p>
 <div style="border: 1px solid #999; padding: 10px; background-color: lightgray;">
-<h3>
-Reference Script
+<h3><a id="CIP33">
+Reference Script</a>
 </h3>
 <p>
 A reference-script utxo carries the code of the validator script in a
@@ -938,7 +940,7 @@ models:</p>
 <tbody>
 <tr class="odd">
 <td>contract (class)</td>
-<td>validator script + <a href="#transactionSchema">transaction
+<td>validator script <a id="quoteTS"></a>+</a> <a href="#transactionSchema">transaction
 schema</a></td>
 </tr>
 <tr class="even">
@@ -1097,8 +1099,7 @@ txInInfoResolved in</p>
 <p>value’:: TxOut -&gt; Value<br> value’ = txOutValue</p>
 <p><span id="Values"></p>
 <div style="border: 1px solid #999; padding: 10px; background-color: lightgray;">
-<h3>
-Value
+<h3><a id="Values">Value</a>
 </h3>
 <p>In Cardano, the type <strong>Value</strong> amounts to a bag of
 assets</p>
@@ -1246,8 +1247,8 @@ schema</strong> any function that produces a transaction body
 <code>TxBody</code> as output, that
 is</span><a href="#quoteTS">↩︎</a></p>
 <blockquote>
-<p><strong><em>Transaction Schema = parameterized Transaction
-Body</em></strong></p>
+<p><strong><em><a href="transactionSchema">Transaction Schema = parameterized Transaction
+Body</a></em></strong></p>
 <p>So a composition of transaction builder with transaction-skeleton
 constructors would form such a schema. In the Atlas framework, a
 transaction body has type <code>GYTxBody</code>.</p>
