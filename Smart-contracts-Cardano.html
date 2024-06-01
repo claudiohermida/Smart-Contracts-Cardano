@@ -1000,13 +1000,7 @@ output <code>fi: O</code>. In order to <em>specify</em> its expected
 function expect, while the postcondition indicates how inputs and
 outputs should relate. The specification states &gt; <em>for every input
 that satisfies the precondition, it and the result satisfy the
-postcondition</em></p>
-<!--
-```haskell
-forall i:I. Pre(i) ==> Post(i,fi)
-```
--->
-<p>which is expressed in first-order logic as</p>
+postcondition</em>, which is expressed in first-order logic as</p>
 <blockquote>
 <p><span class="math display">\[ \forall
 i\,\colon\,I\,.\,\,\mathsf{Pre}(i) \Longrightarrow \mathsf{Post}(i,
@@ -1425,10 +1419,10 @@ which manipulates a state <code>S</code></p>
 <pre><code>State:: * -&gt; *
 State a :: S -&gt; (a,S)</code></pre>
 <blockquote>
-<p><strong><em>A function</em></strong> <span class="math inline">\(\mathsf{f \,:\, I \longrightarrow O}\)</span> with
+<p><strong><em>A function <span class="math inline">\(\mathsf{f \,:\, I \longrightarrow O}\)</span> with
 state <span class="math inline">\(\mathsf{S}\)</span> corresponds to a
 monadic computation <span class="math inline">\(\mathsf{curry(f)\,:\, I
-\longrightarrow State\, O }\)</span></p>
+\longrightarrow State\, O }\)</em></strong></span></p>
 </blockquote>
 </div>
 </div>
