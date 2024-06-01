@@ -142,7 +142,7 @@ In order to emulate the use of the storage variable in a stateless fashion we mu
 ```
 
 In general, we have the following bidirectional translation:
-$$\big[\mathsf{var\\s:State} \vdash \mathsf{f:I\longrightarrow O }\big] \Longleftrightarrow \big[\vdash \mathsf{f':(I,State)\longrightarrow(O,State)}\big]$$
+$$\big[\mathsf{var\, s:State} \vdash \mathsf{f:I\longrightarrow O }\big] \Longleftrightarrow \big[\vdash \mathsf{f':(I,State)\longrightarrow(O,State)}\big]$$
 
 which means that a function in the context/environment of a variable of type <span class="math inline">\\\mathsf{State}\\</span> can be represented by a function *in empty context* with extra input and output of type <span class="math inline">\\\mathsf{State}\\</span>.
 
