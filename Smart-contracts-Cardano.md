@@ -304,7 +304,7 @@ Let us compare the salient aspects of transactions on both models:
 
 <div style="border: 1px solid #999; padding: 10px; background-color: lightgrey;">
 
-### Reference input
+### <span id="CIP31">Reference input</span>
 
 Since the Vasil hardfork, CIP-31 <span class="citation">(Peyton Jones 2021b)</span> was implemented allowing for a new kind of input: **reference input**. It allows transactions to simply treat some inputs as *read-only data* rather than *resources*: we can read their value and datum, but not modify them. That way we avoid the waste of compute in consuming and (re)producing a given utxo just to read its content. [↩︎](#Note1)
 
@@ -333,9 +333,9 @@ The reason for putting the code in a utxo is that the very simple model of ledge
 
 <div style="border: 1px solid #999; padding: 10px; background-color: lightgray;">
 
-### Reference Script
+### Reference Script CIP-33
 
-A reference-script utxo carries the code of the validator script in a special new field. It was also introduced by <span class="citation">(Peyton Jones 2021c)</span> implemented in the Vasil hard-fork. It greatly simplifies the size of transactions which invoke this validator, as we can just refer to the given utxo rather than pass the whole piece of code each time we refer to it.[↩︎](#refscript)
+A reference-script utxo carries the code of the validator script in a special new field. It was also introduced by <span class="citation">Peyton Jones 2021c)</span> implemented in the Vasil hard-fork. It greatly simplifies the size of transactions which invoke this validator, as we can just refer to the given utxo rather than pass the whole piece of code each time we refer to it.[↩︎](#refscript)
 
 </div>
 
@@ -349,13 +349,14 @@ In order to accommodate the possibility of several instances of the same contrac
 [https://developers.cardano.org/docs/smart-contracts](https://developers.cardano.org/docs/smart-contracts/)
 
 > *Contract instances:* *When you have contracts designed to run in multiple steps, the UTXO that represents the current state of a specific instance/invocation of that script is something you need to be able to keep track of.* *There is no standard for how to do this as of now, but one way to accomplish this is to be to create a minting-policy that only allows minting of thread token NFTs to the script’s address, and then use the NFTs as thread-tokens by having the validator script enforce such NFTs be moved with each transaction.*
+</div>
 
 Here is a brief summary of related concepts in both blockchain models:
 
 | Account based            | eUTXO Based                                                 |
 |--------------------------|-------------------------------------------------------------|
 | contract (class)         | validator script + [transaction schema](#transactionSchema) |
-| contract (object)        | initial-state-eutxo \\ script address                       |
+| contract (object)        | initial-state-eutxo \@ script address                       |
 | contract account address | contract token (NFT)                                        |
 | declaration              | reference script eutxo                                      |
 
@@ -489,7 +490,7 @@ value’ = txOutValue
 
 <div style="border: 1px solid #999; padding: 10px; background-color: lightgray;">
 
-### Value
+### <span id="Values">Value</span>
 
 In Cardano, the type **Value** amounts to a bag of assets
 
