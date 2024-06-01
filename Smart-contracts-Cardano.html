@@ -503,19 +503,16 @@ of reversing the list as we go through it:</p>
     in  
         accumulator := EmptyList;  -- initialize state
         reverseWithAccumulator l
-
 </code></pre>
 <p>In order to emulate the use of the storage variable in a stateless
 fashion we must emulate the two operations on it:</p>
 <ul>
 <li>To emulate <code>read</code> we must provide the contents of the
-variable as an additional
-<strong><em><font color="green">input</font></em></strong> to the
+variable as an additional <font color="green">input</font> to the
 <code>reverse</code> function</li>
 <li>To emulate <code>update</code> we must produce the updated content
-as an additional
-<strong><em><font color="green">output</font></em></strong> so that it
-can be used in later computation.</li>
+as an additional <font color="green">output</font> so that it can be
+used in later computation.</li>
 </ul>
 <pre class="haskell"><code> newType State = List A
 
@@ -830,7 +827,7 @@ before effecting a change on the distributed ledger</td>
 </tr>
 </tbody>
 </table>
-<span id="CIP31">
+<p><span id="CIP31"></p>
 <div style="border: 1px solid #999; padding: 10px; background-color: lightgrey;">
 <h3>
 Reference input
@@ -885,7 +882,7 @@ needed for execution (validation)</p>
 model of ledger in Cardano, namely as a set or collection of utxos,
 implies that if we want to associate any information to an address, we
 must build a utxo targetted at that address, containing that info.</p>
-<span id="CIP33">
+<p><span id="CIP33"></p>
 <div style="border: 1px solid #999; padding: 10px; background-color: lightgray;">
 <h3>
 Reference Script
@@ -908,6 +905,7 @@ identifies the instance; it is the actual counterpart of the <em>account
 address</em> of the contract object. For a good example of this use of
 NFTs see <span class="citation">(Brujnes 2023a)</span>.</p>
 <div style="border: 1px solid #999; padding: 10px; background-color: lightgray;">
+
 <h3>
 On NFT threat tokens
 </h3>
@@ -926,49 +924,34 @@ transaction.</em></p>
 </blockquote>
 <p>Here is a brief summary of related concepts in both blockchain
 models:</p>
-<table border="1" style="border-color: blue;">
+<table style="width:97%;">
+<colgroup>
+<col width="37%" />
+<col width="59%" />
+</colgroup>
 <thead>
-<tr>
-<th>
-Account based
-</th>
-<th>
-eUTXO Based
-</th>
+<tr class="header">
+<th>Account based</th>
+<th>eUTXO Based</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>
-contract (class)
-</td>
-<td>
-validator script + <span id="quoteTS"><a href="#transactionSchema">transaction schema</a></span>
-</td>
+<tr class="odd">
+<td>contract (class)</td>
+<td>validator script + <a href="#transactionSchema">transaction
+schema</a></td>
 </tr>
-<tr>
-<td>
-contract (object)
-</td>
-<td>
-initial-state-eutxo @ script address
-</td>
+<tr class="even">
+<td>contract (object)</td>
+<td>initial-state-eutxo \@ script address</td>
 </tr>
-<tr>
-<td>
-contract account address
-</td>
-<td>
-contract token (NFT)
-</td>
+<tr class="odd">
+<td>contract account address</td>
+<td>contract token (NFT)</td>
 </tr>
-<tr>
-<td>
-declaration
-</td>
-<td>
-reference script eutxo
-</td>
+<tr class="even">
+<td>declaration</td>
+<td>reference script eutxo</td>
 </tr>
 </tbody>
 </table>
@@ -1094,22 +1077,22 @@ transaction.</p>
 <p>A transaction <span style="color:blue">tx</span> <img role="img" src="data:image/png;base64,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" />
 must satfisfy its <strong><em>specification</em></strong>:</p>
 <blockquote>
-<p><strong><em>SPEC(tx) = validator<sub>1</sub> (datum(in<sub>1</sub>),
-redeemer<sub>1</sub>, sc<sub>1</sub>) ∧ … ∧
+<p><strong><em>SPEC(tx) = validator</em></strong><sub>1</sub>
+(datum(in<sub>1</sub>), redeemer<sub>1</sub>, sc<sub>1</sub>) ∧ … ∧
 validator<sub>n</sub>(datum(in<sub>n</sub>),redeemer<sub>n</sub>,
-sc<sub>n</sub>) ∧ Preservation-of-Value(sc)</em></strong></p>
+sc<sub>n</sub>) ∧ Preservation-of-Value(sc)</p>
 </blockquote>
-<p>where <strong>sc<sub>i</sub></strong> is the script context
-associated to <strong>in<sub>i</sub></strong> to unlock it, and</p>
+<p>where <strong>sc</strong><sub>i</sub> is the script context
+associated to <strong>in</strong><sub>i</sub> to unlock it, and</p>
 <blockquote>
 <p><strong><em>Preservation-of-Value(scriptContext)</em></strong> = “sum
 of values of inputs plus value minted = sum of values of outpus plus tx
 fee”:</p>
 </blockquote>
 <blockquote>
-<p><strong><em>Value(in<sub>1</sub>) + … + Value(in<sub>n</sub>) +
-Value(forge(tx)) = Value(out<sub>1</sub>) + … + Value(out<sub>m</sub>) +
-Fee(tx)</em></strong></p>
+<p><strong><em>Value(in</em></strong><sub>1</sub>) + … +
+Value(in<sub>n</sub>) + Value(forge(tx)) = Value(out<sub>1</sub>) + … +
+Value(out<sub>m</sub>) + Fee(tx)</p>
 </blockquote>
 <p>or, in Plutus notation:</p>
 <p>value (in<sub>1</sub>) &lt;&gt; … &lt;&gt; value(in<sub>n</sub>)
@@ -1118,7 +1101,7 @@ value’(out<sub>m</sub>) &lt;&gt; txInfoFee</p>
 <p>where <br> value :: TxInInfo -&gt; Value<br> value in = txOutValue $
 txInInfoResolved in</p>
 <p>value’:: TxOut -&gt; Value<br> value’ = txOutValue</p>
-<span id="Values">
+<p><span id="Values"></p>
 <div style="border: 1px solid #999; padding: 10px; background-color: lightgray;">
 <h3>
 Value
@@ -1264,7 +1247,7 @@ data providers. Such a transaction builder will attempt to complete the
 transaction body using a coin selection algorithm to select relevant fee
 and collateral input eutxos, and well as balancing the transaction by
 sending unspent input value to a change address.</p>
-<p><span id="transactionSchema"> We call <strong>transaction
+<p><span id="transactionSchema">We call <strong>transaction
 schema</strong> any function that produces a transaction body
 <code>TxBody</code> as output, that
 is</span><a href="#quoteTS">↩︎</a></p>
@@ -1373,8 +1356,7 @@ version see <span class="citation">(Brujnes 2023b)</span>)</p>
 
     txBody &lt;- runGYTxMonadNode networkId providers beneficiary collateral $ 
         claimVestingBeneficiary beneficiary oref
-    tid     &lt;- gySubmitTx providers $ signTx txBody [skey]
-</code></pre>
+    tid     &lt;- gySubmitTx providers $ signTx txBody [skey]</code></pre>
 </div>
 <div id="smart-contracts-in-cardano" class="section level2">
 <h2>Smart Contracts in Cardano</h2>
@@ -1392,18 +1374,18 @@ must ‘share’ the data types <code>Datum</code> and
 on-chain setups, which might involve different languages. Essentially,
 <code>Datum</code> is a <em>product</em> of the various components of
 local state of the contract (besides its <code>Value</code>):</p>
-<pre class="haskell"><code>  data Datum = Datum
-  { var_1 :: Type_1
-  , var_2 :: Type_2
-  , ...
-  , var_n :: Type_n
-  }</code></pre>
+<div style="border: 1px solid #999; padding: 10px; background-color: lightgray;">
+<p>data Datum = Datum { var<sub>1</sub> :: Type<sub>1</sub> ,
+var<sub>2</sub> :: Type<sub>2</sub> , … , var<sub>n</sub> ::
+Type<sub>n</sub> }</p>
+</div>
 <p>while <code>Redeemer</code> is a <em>sum</em> type, whose various
 alternatives correspond essentially to the methods signatures:</p>
-<pre><code>data Redeemer
-  = Method_1 Type_11 ... Type_1p
-  -- ...
-  | Method_m Type_m1  ... Type_mq</code></pre>
+<div style="border: 1px solid #999; padding: 10px; background-color: lightgray;">
+<p>data Redeemer = Method<sub>1</sub> Type<sub>11</sub> …
+Type<sub>1p</sub> – … | Method<sub>m</sub> Type<sub>m1</sub> …
+Type<sub>mq</sub></p>
+</div>
 <p>The correspondence of “methods” to redeemer cases need not be 1-1:
 some methods interact with various ‘pieces of state’ which will be
 represented by several inputs, each to be consumed by a possibly
@@ -1443,10 +1425,10 @@ which manipulates a state <code>S</code></p>
 <pre><code>State:: * -&gt; *
 State a :: S -&gt; (a,S)</code></pre>
 <blockquote>
-<p><strong><em>A function <span class="math inline">\(\mathsf{f \,:\, I
-\longrightarrow O}\)</span> with state <span class="math inline">\(\mathsf{S}\)</span> corresponds to a monadic
-computation <span class="math inline">\(\mathsf{curry(f)\,:\, I
-\longrightarrow State\, O }\)</span></em></strong></p>
+<p><strong><em>A function</em></strong> <span class="math inline">\(\mathsf{f \,:\, I \longrightarrow O}\)</span> with
+state <span class="math inline">\(\mathsf{S}\)</span> corresponds to a
+monadic computation <span class="math inline">\(\mathsf{curry(f)\,:\, I
+\longrightarrow State\, O }\)</span></p>
 </blockquote>
 </div>
 </div>
