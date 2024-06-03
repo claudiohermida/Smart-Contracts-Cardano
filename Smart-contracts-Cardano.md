@@ -768,7 +768,7 @@ The expression `S -> (O,S)` is precisely the so-called *State monad* at the type
     State:: * -> *
     State a :: S -> (a,S)
 
-> <strong><em><span class="math inline"> A function $\mathsf{f \,:\, I \longrightarrow O}$</span> with state <span class="math inline">$\mathsf{S}$</span> corresponds to a monadic computation <span class="math inline">$\mathsf{curry(f)\,:\, I \longrightarrow State O}$</span></strong></em>
+> <strong><em>A function $\mathsf{f \,:\, I \longrightarrow O}$</span> with state $\mathsf{S}$ corresponds to a monadic computation $\mathsf{curry(f)\,:\, I \longrightarrow State\, O}$</strong></em>
 
 </div>
 
