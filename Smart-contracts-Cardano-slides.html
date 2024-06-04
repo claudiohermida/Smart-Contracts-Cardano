@@ -493,9 +493,9 @@ tx-effect (ledger) = (legder \ inputs) + outputs
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="38" data-paginate="true" data-background-color="#fff" data-background-image="images/Cardano-RGB_Logo-Stack-Blue.png" data-theme="gaia" lang="en-CA" data-marpit-pagination="38" style="--paginate:true;--background-color:#fff;--background-image:images/Cardano-RGB_Logo-Stack-Blue.png;--theme:gaia;background-color:#fff;background-image:images/Cardano-RGB_Logo-Stack-Blue.png;background-position:center;background-repeat:no-repeat;background-size:cover;" data-marpit-pagination-total="48">
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-haskell"><span class="hljs-comment">-- build transaction to Claim vested amount:</span>
-
+    beneficiary &lt;- extractBeneficiary oref
     txBody &lt;- runGYTxMonadNode networkId providers beneficiary collateral $ 
-        claimVestingBeneficiary beneficiary oref
+        claimVestingBeneficiary oref
     tid     &lt;- gySubmitTx providers $ signTx txBody [skey]
 </code></pre>
 </section>
@@ -613,7 +613,7 @@ data Redeemer = method<sub>1</sub> Type<sub>11</sub> … Type<sub>1p</sub> | …
 </code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="48" data-paginate="true" data-background-color="#fff" data-background-image="images/Cardano-RGB_Logo-Stack-Blue.png" data-theme="gaia" lang="en-CA" data-marpit-pagination="48" style="--paginate:true;--background-color:#fff;--background-image:images/Cardano-RGB_Logo-Stack-Blue.png;--theme:gaia;background-color:#fff;background-image:images/Cardano-RGB_Logo-Stack-Blue.png;background-position:center;background-repeat:no-repeat;background-size:cover;" data-marpit-pagination-total="48">
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code> f:: (I,S) -&gt; (O,S)  ~~~~~&gt; curry(f):: I -&gt; &lt;u&gt;(S -&gt; (O,S))&lt;/u&gt;
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code> f:: (I,S) -&gt; (O,S)  ~~~~~&gt; curry(f):: I -&gt; (S -&gt; (O,S))
 </code></pre>
 <p><em>State monad</em> at the type <code>O</code>:</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-haskell">    <span class="hljs-type">State</span>:: * -&gt; *

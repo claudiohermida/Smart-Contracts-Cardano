@@ -483,9 +483,9 @@ claimVestingBeneficiary oref  = do
 ---
 ```haskell
 -- build transaction to Claim vested amount:
-
+    beneficiary <- extractBeneficiary oref
     txBody <- runGYTxMonadNode networkId providers beneficiary collateral $ 
-        claimVestingBeneficiary beneficiary oref
+        claimVestingBeneficiary oref
     tid     <- gySubmitTx providers $ signTx txBody [skey]
 ```
 ---
@@ -596,7 +596,7 @@ curry $ uncurry g == g              uncurry $ curry f == f
 ```
 ---
 ```
- f:: (I,S) -> (O,S)  ~~~~~> curry(f):: I -> <u>(S -> (O,S))</u>
+ f:: (I,S) -> (O,S)  ~~~~~> curry(f):: I -> (S -> (O,S))
  ```
 *State monad* at the type `O`:
 ```haskell
