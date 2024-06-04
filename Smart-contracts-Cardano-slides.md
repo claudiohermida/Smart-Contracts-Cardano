@@ -74,7 +74,7 @@ contract VestingContract {
 <div style="text-align: center;">
 
 ```
-Account-Ledger = Map Address Value
+Account-Ledger = Map Address (Value,State)
 ```
 
 ```
