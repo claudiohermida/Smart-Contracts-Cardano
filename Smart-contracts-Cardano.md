@@ -156,7 +156,7 @@ which means that a function in the context/environment of a variable of type <sp
 
 In the account-based model of smart contracts on a blockchain (Ethereum), a distributed ledger is a collection of ***accounts*** (identified by an ***address***) with associated information, in particular a *balance* of assets or values held.
 
-    Account-Ledger = Map Address Value
+    Account-Ledger = Map Address (Value,State)
 
 A ***smart contract*** is an *object* , in the sense of object-oriented programming. Therefore it has an internal *local state*, which includes the *balance*, and *methods*. A smart contract is *deployed* (held) at an (account) address in the ledger.
 
@@ -227,9 +227,9 @@ As we mentioned, in blockchains, the state of an account, uniquely identified by
 | **value**   | value locked in this utxo                    |
 | **datum**   | local state                                  |
 
-Notice that in the account-based model, an address has associated state, while here (a piece of) state points to an address.
+This is literally the functional interpretation of the "state" embodied in the account-based model: a map from `Address` to `(Value,State)` is realized as a list of triples `[(address,value,state)]' with no repetitions in the first component. That triple is exactly the data content of an eutxo.
 
-Just like in Bitcoin, eutxos in Cardano are ***resources***: they are *produced* by a transaction (as outputs) and can be *consumed* or *spent* once, and only once, by another transaction (as inputs).
+Just like in Bitcoin, eutxos in Cardano are ***resources***: they are *produced* by a transaction (as outputs) and can be *consumed* or *spent* once, and only once, by another transaction (as inputs). The resource nature of a eutxo is realized by uniquely identifying it with `TxOutRef`, which is a pair  `(TransactionId,TxIx)`; this is transaction identifier of the transaction that produces this output, together with the index which signals its position in the list of outputs of the transaction.  
 
 According to this reformulation, a single eutxo would suffice to account for both value and local state at an address, which we can see as the equivalent of an account. However, in line with Bitcoin’s utxos, Cardano allows multiple etuxos to be held at a single address, thereby effectively splitting or *sharding* the local state at an address. This sharding has great benefits for efficiency: a transaction can select very precisely those utxos which hold the piece of state of interest to consume, and transactions consuming different utxos can be computed/validated in parallel. We elaborate on transaction execution/validation later on.
 
@@ -270,7 +270,10 @@ Let us elaborate the process of *building* and *executing* a transaction:
 
 - we *sign and submit* the transaction body for *validation*: each input held at a script triggers the execution of the corresponding validator and each input held at a pkh is signature-verified.
 
-- if all inputs validate and the transaction satisfies preservation-of-values (that is, inputs and outputs are balanced), the transaction submission is *successful* and the ledger gets updated: inputs are spent (eliminated) and outputs are created (added). Otherwise, the transaction *fails* and has no effect on the ledger.
+- if all inputs validate and the transaction satisfies preservation-of-values (that is, inputs and outputs are balanced), the transaction submission is *successful* and the ledger gets updated: inputs are spent (eliminated) and outputs are created (added): the triples of `(address,value,datum)` of our would-be outputs get uniquely referenced by the transaction-id we have just validated, together with the respective index, becoming genuine *eutxos*. 
+
+If any of the inputs fails to validate or the transaction is not properly balanced, the transaction *fails* and has no effect on the ledger.
+
 
 The eUTXO model lends itself to a very simple modelling<sup><span class="citation">(Brünjes and Gabbay 2020)</span></sup> of a distributed ledger: it is the set or collection of eutxos
 

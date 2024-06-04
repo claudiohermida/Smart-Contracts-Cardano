@@ -425,7 +425,7 @@ of type <span class="math inline"><span class="math inline">State</span></span> 
 <strong><em>accounts</em></strong> (identified by an
 <strong><em>address</em></strong>) with associated information, in
 particular a <em>balance</em> of assets or values held.</p>
-<pre><code>Account-Ledger = Map Address Value</code></pre>
+<pre><code>Account-Ledger = Map Address (Value,State)</code></pre>
 <p>A <strong><em>smart contract</em></strong> is an <em>object</em> , in
 the sense of object-oriented programming. Therefore it has an internal
 <em>local state</em>, which includes the <em>balance</em>, and
@@ -526,12 +526,20 @@ held/locked</td>
 </tr>
 </tbody>
 </table>
-<p>Notice that in the account-based model, an address has associated
-state, while here (a piece of) state points to an address.</p>
+<p>This is literally the functional interpretation of the “state”
+embodied in the account-based model: a map from <code>Address</code> to
+<code>(Value,State)</code> is realized as a list of triples
+`[(address,value,state)]’ with no repetitions in the first component.
+That triple is exactly the data content of an eutxo.</p>
 <p>Just like in Bitcoin, eutxos in Cardano are
 <strong><em>resources</em></strong>: they are <em>produced</em> by a
 transaction (as outputs) and can be <em>consumed</em> or <em>spent</em>
-once, and only once, by another transaction (as inputs).</p>
+once, and only once, by another transaction (as inputs). The resource
+nature of a eutxo is realized by uniquely identifying it with
+<code>TxOutRef</code>, which is a pair
+<code>(TransactionId,TxIx)</code>; this is transaction identifier of the
+transaction that produces this output, together with the index which
+signals its position in the list of outputs of the transaction.</p>
 <p>According to this reformulation, a single eutxo would suffice to
 account for both value and local state at an address, which we can see
 as the equivalent of an account. However, in line with Bitcoin’s utxos,
@@ -618,10 +626,15 @@ signature-verified.</p></li>
 <li><p>if all inputs validate and the transaction satisfies
 preservation-of-values (that is, inputs and outputs are balanced), the
 transaction submission is <em>successful</em> and the ledger gets
-updated: inputs are spent (eliminated) and outputs are created (added).
-Otherwise, the transaction <em>fails</em> and has no effect on the
-ledger.</p></li>
+updated: inputs are spent (eliminated) and outputs are created (added):
+the triples of <code>(address,value,datum)</code> of our would-be
+outputs get uniquely referenced by the transaction-id we have just
+validated, together with the respective index, becoming genuine
+<em>eutxos</em>.</p></li>
 </ul>
+<p>If any of the inputs fails to validate or the transaction is not
+properly balanced, the transaction <em>fails</em> and has no effect on
+the ledger.</p>
 <p>The eUTXO model lends itself to a very simple modelling<sup><span class="citation">(Brünjes and Gabbay 2020)</span></sup> of a distributed
 ledger: it is the set or collection of eutxos</p>
 <pre><code> Ledger = { eutxo } </code></pre>
