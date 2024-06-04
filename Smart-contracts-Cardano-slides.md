@@ -101,7 +101,7 @@ tx-method : Account-Ledger -> Account-Ledger
 
 Imperative programming: a **variable** is an *object* with two methods: `read`  and `update`
 
-To emulate such state in a stateless fashion, we must emulate these two operations.
+To emulate such (storage) variable in a stateless fashion, we must emulate these two operations.
 
 - `read`: we must provide the contents of the variable as an additional *input*
 - `update`:  we must produce the updated content as an additional *output* so that it can be used in later computation.
@@ -214,13 +214,12 @@ In Cardano
 ## Validators
 
 For on-chain validation, Cardano introduces
-
 ``` haskell
 validator :: Datum -> Redeemer -> ScriptContext -> Bool
 ```
 to validate/allow the consumption of an *input* in a transaction. 
 - **Datum**: is the datum of the input eutxo
-- **Redeemer**: is the action/method whose execution we are validating
+- **Redeemer**: is the action/method whose execution is validated
 - **ScriptContext**: indicates *purpose* of the script being executed (spending an eutxo, minting, staking, etc) and the *transaction context* (inputs, outputs, signatures).
 
 ---
@@ -422,9 +421,17 @@ mkVestingValidator dat Claim ctx =
 - Conversely, we might notice that in the account-based model, the transfer of `amount` to `beneficiary/benefactor` is achieved by invoking a system-defined method `payable(beneficiary).transfer(amount)` which has its own (prespecified) pre and postconditions.
 - The validator, on the other hand, cannot know whether the funds unlocked will satisfy the transfer postcondition; we only know that the value in the input will be consumed, but we must ensure that it reaches the beneficiary/benefactor, hence the additional check `amountPaidToBeneficiary`
 
+---
+## Transaction specification
 
+<img src="images/tx.png" alt="Claim diagram" style="width: 20%; height: auto;">
+
+***SPEC(tx) = validator<sub>1</sub> (datum(in<sub>1</sub>), redeemer<sub>1</sub>, sc<sub>1</sub>) ∧ … ∧ validator<sub>n</sub>(datum(in<sub>n</sub>),redeemer<sub>n</sub>, sc<sub>n</sub>) ∧ Preservation-of-Value(sc)***
+
+***Preservation-of-Value(scriptContext)*** = “sum of values of inputs + value minted = sum of values of outpus + tx fee”
 
 ---
+
 ## Transaction Schema
 
 We call **transaction schema** any function that produces a transaction body `TxBody` as output, that is
