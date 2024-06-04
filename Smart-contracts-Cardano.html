@@ -1005,72 +1005,91 @@ transaction body has type <code>GYTxBody</code>.</p>
 </blockquote>
 <p>Let us see the relevant transaction schemas for our example Vesting
 contract (we use <em>inline datums</em><sup><span class="citation">(Peyton Jones 2021a)</span></sup>):</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- implement business logic of Claim method</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- implement business logic of Claim method</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="ot">claimVestingBeneficiary ::</span> <span class="dt">GYTxQueryMonad</span> m <span class="ot">=&gt;</span> <span class="dt">GYPubKeyHash</span> <span class="ot">-&gt;</span> <span class="dt">GYTxOutRef</span> <span class="ot">-&gt;</span> m (<span class="dt">GYTxSkeleton</span> <span class="dt">&#39;PlutusV2</span>)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>claimVestingBeneficiary beneficiary oref  <span class="ot">=</span> <span class="kw">do</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    slot <span class="ot">&lt;-</span> currentSlot</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="op">$</span> isInvalidBefore slot <span class="op">&lt;&gt;</span>                        <span class="co">-- sets up the validity interval</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>             mustBeSignedBy beneficiary <span class="op">&lt;&gt;</span>                  <span class="co">-- adds a required signatory</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>             mustHaveInput <span class="dt">GYTxIn</span>                           <span class="co">-- adds input</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>                { gyTxInTxOutRef <span class="ot">=</span> oref</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>                , gyTxInWitness  <span class="ot">=</span> <span class="dt">GYTxInWitnessScript</span>      <span class="co">-- specify parameters to consume input eutxo: </span></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>                    (<span class="dt">GYInScript</span> <span class="op">$</span> vestingValidatorScript)   <span class="co">-- script</span></span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">Nothing</span>                                 <span class="co">-- inline datum</span></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">Claim</span>                                   <span class="co">-- redeemer</span></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>                } <span class="op">&lt;&gt;</span></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>             mustHaveOutput <span class="op">$</span> <span class="dt">GYTxOut</span>                        <span class="co">-- adds output</span></span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>                { gyTxOutAddress <span class="ot">=</span> beneficiary               <span class="co">-- target address</span></span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>                , gyTxOutValue   <span class="ot">=</span> getValueFromTxOutRef oref <span class="co">-- amount to transfer</span></span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>                , gyTxOutDatum   <span class="ot">=</span> <span class="dt">Nothing</span>                   <span class="co">-- no datum</span></span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>                , gyTxOutRefS    <span class="ot">=</span> <span class="dt">Nothing</span>                   <span class="co">-- no reference script</span></span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>                }</span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>       </span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a><span class="co">-- Helper function to get the GYValue from a GYTxInTxOutRef</span></span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="ot">getValueFromTxOutRef ::</span> <span class="dt">GYTxQueryMonad</span> m <span class="ot">=&gt;</span> <span class="dt">GYTxInTxOutRef</span> <span class="ot">-&gt;</span> m (<span class="dt">Maybe</span> <span class="dt">GYValue</span>)</span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>getValueFromTxOutRef txOutRef <span class="ot">=</span> <span class="kw">do</span></span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Query the UTxO</span></span>
-<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>    utxo <span class="ot">&lt;-</span> gyQueryUtxoAtTxOutRef txOutRef</span>
-<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Extract the GYValue</span></span>
-<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="op">$</span> <span class="fu">fmap</span> gyTxOutValue utxo</span>
-<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a><span class="co">-- implement business logic of Cancel method</span></span>
-<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a><span class="ot">cancelVestingBenefactor ::</span> <span class="dt">GYTxQueryMonad</span> m <span class="ot">=&gt;</span> <span class="dt">GYPubKeyHash</span> <span class="ot">-&gt;</span> <span class="dt">GYTxOutRef</span> <span class="ot">-&gt;</span> m (<span class="dt">GYTxSkeleton</span> <span class="dt">&#39;PlutusV2</span>)</span>
-<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>cancelVesting benefactor oref  <span class="ot">=</span> <span class="kw">do</span></span>
-<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>    slot <span class="ot">&lt;-</span> currentSlot</span>
-<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="op">$</span> isInvalidAfter slot <span class="op">&lt;&gt;</span>                           <span class="co">-- sets up the validity interval</span></span>
-<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>             mustBeSignedBy benefactor <span class="op">&lt;&gt;</span>                     <span class="co">-- adds a required signatory</span></span>
-<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>             mustHaveInput <span class="dt">GYTxIn</span>                             <span class="co">-- adds input ... similar to claimVestingBeneficiary</span></span>
-<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>                { gyTxInTxOutRef <span class="ot">=</span> oref</span>
-<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>                , gyTxInWitness  <span class="ot">=</span> <span class="dt">GYTxInWitnessScript</span></span>
-<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>                    (<span class="dt">GYInScript</span> <span class="op">$</span> vestingValidatorScript)</span>
-<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">Nothing</span> </span>
-<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">Cancel</span></span>
-<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a>                } <span class="op">&lt;&gt;</span></span>
-<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>             mustHaveOutput <span class="op">$</span> <span class="dt">GYTxOut</span>                          <span class="co">-- adds output ... similar to claimVestingBeneficiary</span></span>
-<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>                { gyTxOutAddress <span class="ot">=</span> benefactor</span>
-<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a>                , gyTxOutValue   <span class="ot">=</span> getValueFromTxOutRef oref</span>
-<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>                , gyTxOutDatum   <span class="ot">=</span> <span class="dt">Nothing</span></span>
-<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a>                , gyTxOutRefS    <span class="ot">=</span> <span class="dt">Nothing</span></span>
-<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a>                }</span>
-<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a><span class="co">-- Wrapping the typed validator to an untyped version</span></span>
-<span id="cb22-56"><a href="#cb22-56" aria-hidden="true" tabindex="-1"></a><span class="ot">mkUntypedVestingValidator ::</span> <span class="dt">BuiltinData</span> <span class="ot">-&gt;</span> <span class="dt">BuiltinData</span> <span class="ot">-&gt;</span> <span class="dt">BuiltinData</span> <span class="ot">-&gt;</span> ()</span>
-<span id="cb22-57"><a href="#cb22-57" aria-hidden="true" tabindex="-1"></a>mkUntypedVestingValidator d r ctx <span class="ot">=</span></span>
-<span id="cb22-58"><a href="#cb22-58" aria-hidden="true" tabindex="-1"></a>    check (mkVestingValidator (unsafeFromBuiltinData d) (unsafeFromBuiltinData r) (unsafeFromBuiltinData ctx))</span>
-<span id="cb22-59"><a href="#cb22-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-60"><a href="#cb22-60" aria-hidden="true" tabindex="-1"></a><span class="co">-- Compile the untyped validator to a Plutus Validator</span></span>
-<span id="cb22-61"><a href="#cb22-61" aria-hidden="true" tabindex="-1"></a><span class="ot">vestingValidator ::</span> <span class="dt">Validator</span></span>
-<span id="cb22-62"><a href="#cb22-62" aria-hidden="true" tabindex="-1"></a>vestingValidator <span class="ot">=</span> mkValidatorScript <span class="op">$$</span>(PlutusTx.compile [<span class="op">||</span> mkUntypedVestingValidator <span class="op">||</span>])</span>
-<span id="cb22-63"><a href="#cb22-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-64"><a href="#cb22-64" aria-hidden="true" tabindex="-1"></a><span class="co">-- Create a wrapped version to use within GeniusYield</span></span>
-<span id="cb22-65"><a href="#cb22-65" aria-hidden="true" tabindex="-1"></a><span class="ot">vestingAddress ::</span> <span class="dt">GYAddress</span></span>
-<span id="cb22-66"><a href="#cb22-66" aria-hidden="true" tabindex="-1"></a>vestingAddress <span class="ot">=</span> scriptAddress vestingValidator</span></code></pre></div>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="ot">claimVestingBeneficiary ::</span> <span class="dt">GYTxQueryMonad</span> m <span class="ot">=&gt;</span> <span class="dt">GYTxInTxOutRef</span> <span class="ot">-&gt;</span> m (<span class="dt">GYTxSkeleton</span> <span class="dt">&#39;PlutusV2</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>claimVestingBeneficiary oref  <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    slot <span class="ot">&lt;-</span> currentSlot</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    beneficiary <span class="ot">&lt;-</span> extractBeneficiary oref                  <span class="co">-- gets beneficiary from inline datum</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="op">$</span> isInvalidBefore slot <span class="op">&lt;&gt;</span>                        <span class="co">-- sets up the validity interval</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>             mustBeSignedBy beneficiary <span class="op">&lt;&gt;</span>                  <span class="co">-- adds a required signatory</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>             mustHaveInput <span class="dt">GYTxIn</span>                           <span class="co">-- adds input</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>                { gyTxInTxOutRef <span class="ot">=</span> oref</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>                , gyTxInWitness  <span class="ot">=</span> <span class="dt">GYTxInWitnessScript</span>      <span class="co">-- specify parameters to consume input eutxo: </span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>                    (<span class="dt">GYInScript</span> <span class="op">$</span> vestingValidatorScript)   <span class="co">-- script</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">Nothing</span>                                 <span class="co">-- inline datum</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">Claim</span>                                   <span class="co">-- redeemer</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>                } <span class="op">&lt;&gt;</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>             mustHaveOutput <span class="op">$</span> <span class="dt">GYTxOut</span>                        <span class="co">-- adds output</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>                { gyTxOutAddress <span class="ot">=</span> beneficiary               <span class="co">-- target address</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>                , gyTxOutValue   <span class="ot">=</span> getValueFromTxOutRef oref <span class="co">-- amount to transfer</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>                , gyTxOutDatum   <span class="ot">=</span> <span class="dt">Nothing</span>                   <span class="co">-- no datum</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>                , gyTxOutRefS    <span class="ot">=</span> <span class="dt">Nothing</span>                   <span class="co">-- no reference script</span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>                }</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="co">-- Helper function to get the GYValue from a GYTxInTxOutRef</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a><span class="ot">getValueFromTxOutRef ::</span> <span class="dt">GYTxQueryMonad</span> m <span class="ot">=&gt;</span> <span class="dt">GYTxInTxOutRef</span> <span class="ot">-&gt;</span> m (<span class="dt">Maybe</span> <span class="dt">GYValue</span>)</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>getValueFromTxOutRef txOutRef <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Query the UTxO</span></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>    utxo <span class="ot">&lt;-</span> gyQueryUtxoAtTxOutRef txOutRef</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Extract the GYValue</span></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="op">$</span> <span class="fu">fmap</span> gyTxOutValue utxo</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a> <span class="co">-- Helper function to get GYPubKeyHash of beneficiary out of a GYTxInTxOutRef with inline datum</span></span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a><span class="ot">extractBeneficiary ::</span>    <span class="dt">GYTxQueryMonad</span> m <span class="ot">=&gt;</span> <span class="dt">GYTxInTxOutRef</span> <span class="ot">-&gt;</span> m (<span class="dt">Maybe</span> <span class="dt">GYPubKeyHash</span>)</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a> extractBeneficiary txOutRef <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>        utxo <span class="ot">&lt;-</span> gyQueryUtxoAtTxOutRef txOutRef</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>        dat <span class="ot">&lt;-</span> inlineDatum utxo</span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span> <span class="op">$</span> extractBeneficiaryFromDatum dat</span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a><span class="co">-- Function to extract the beneficiary from the given datum</span></span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a><span class="ot">extractBeneficiaryFromDatum ::</span> <span class="dt">GYDatum</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">GYPubKeyHash</span></span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>extractBeneficiaryFromDatum (<span class="dt">GYDatum</span> d) <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>    <span class="dt">VestingDatum</span> {<span class="op">..</span>} <span class="ot">&lt;-</span> fromBuiltinData d</span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>    toGYPubKeyHash <span class="op">$</span> <span class="dt">Just</span> beneficiary</span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a><span class="co">-- Function to extract inline datum from a utxo</span></span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a><span class="ot">inlineDatum ::</span> <span class="dt">GYUTxO</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">GYDatum</span> </span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>inlineDatum utxo<span class="op">@</span><span class="dt">GYUTxO</span>{utxoOutDatum} <span class="ot">=</span> <span class="kw">case</span> utxoOutDatum <span class="kw">of</span> </span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a>                                    <span class="dt">GYOutDatumInline</span> gyDatum <span class="ot">-&gt;</span> <span class="dt">Just</span> gyDatum</span>
+<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>                                    _                        <span class="ot">-&gt;</span> <span class="dt">Nothing</span></span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a><span class="co">-- implement business logic of Cancel method</span></span>
+<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a><span class="ot">cancelVestingBenefactor ::</span> <span class="dt">GYTxQueryMonad</span> m <span class="ot">=&gt;</span> <span class="dt">GYTxOutRef</span> <span class="ot">-&gt;</span> m (<span class="dt">GYTxSkeleton</span> <span class="dt">&#39;PlutusV2</span>)</span>
+<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a>cancelVesting  oref  <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a>    slot <span class="ot">&lt;-</span> currentSlot</span>
+<span id="cb22-56"><a href="#cb22-56" aria-hidden="true" tabindex="-1"></a>    benefactor <span class="ot">&lt;-</span> extractBenefactor oref                      <span class="co">-- gets benefactor from inline datum</span></span>
+<span id="cb22-57"><a href="#cb22-57" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="op">$</span> isInvalidAfter slot <span class="op">&lt;&gt;</span>                           <span class="co">-- sets up the validity interval</span></span>
+<span id="cb22-58"><a href="#cb22-58" aria-hidden="true" tabindex="-1"></a>             mustBeSignedBy benefactor <span class="op">&lt;&gt;</span>                     <span class="co">-- adds a required signatory</span></span>
+<span id="cb22-59"><a href="#cb22-59" aria-hidden="true" tabindex="-1"></a>             mustHaveInput <span class="dt">GYTxIn</span>                             <span class="co">-- adds input ... similar to claimVestingBeneficiary</span></span>
+<span id="cb22-60"><a href="#cb22-60" aria-hidden="true" tabindex="-1"></a>                { gyTxInTxOutRef <span class="ot">=</span> oref</span>
+<span id="cb22-61"><a href="#cb22-61" aria-hidden="true" tabindex="-1"></a>                , gyTxInWitness  <span class="ot">=</span> <span class="dt">GYTxInWitnessScript</span></span>
+<span id="cb22-62"><a href="#cb22-62" aria-hidden="true" tabindex="-1"></a>                    (<span class="dt">GYInScript</span> <span class="op">$</span> vestingValidatorScript)</span>
+<span id="cb22-63"><a href="#cb22-63" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">Nothing</span> </span>
+<span id="cb22-64"><a href="#cb22-64" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">Cancel</span></span>
+<span id="cb22-65"><a href="#cb22-65" aria-hidden="true" tabindex="-1"></a>                } <span class="op">&lt;&gt;</span></span>
+<span id="cb22-66"><a href="#cb22-66" aria-hidden="true" tabindex="-1"></a>             mustHaveOutput <span class="op">$</span> <span class="dt">GYTxOut</span>                          <span class="co">-- adds output ... similar to claimVestingBeneficiary</span></span>
+<span id="cb22-67"><a href="#cb22-67" aria-hidden="true" tabindex="-1"></a>                { gyTxOutAddress <span class="ot">=</span> benefactor</span>
+<span id="cb22-68"><a href="#cb22-68" aria-hidden="true" tabindex="-1"></a>                , gyTxOutValue   <span class="ot">=</span> getValueFromTxOutRef oref</span>
+<span id="cb22-69"><a href="#cb22-69" aria-hidden="true" tabindex="-1"></a>                , gyTxOutDatum   <span class="ot">=</span> <span class="dt">Nothing</span></span>
+<span id="cb22-70"><a href="#cb22-70" aria-hidden="true" tabindex="-1"></a>                , gyTxOutRefS    <span class="ot">=</span> <span class="dt">Nothing</span></span>
+<span id="cb22-71"><a href="#cb22-71" aria-hidden="true" tabindex="-1"></a>                }</span>
+<span id="cb22-72"><a href="#cb22-72" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb22-73"><a href="#cb22-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-74"><a href="#cb22-74" aria-hidden="true" tabindex="-1"></a><span class="co">-- Wrapping the typed validator to an untyped version</span></span>
+<span id="cb22-75"><a href="#cb22-75" aria-hidden="true" tabindex="-1"></a><span class="ot">mkUntypedVestingValidator ::</span> <span class="dt">BuiltinData</span> <span class="ot">-&gt;</span> <span class="dt">BuiltinData</span> <span class="ot">-&gt;</span> <span class="dt">BuiltinData</span> <span class="ot">-&gt;</span> ()</span>
+<span id="cb22-76"><a href="#cb22-76" aria-hidden="true" tabindex="-1"></a>mkUntypedVestingValidator d r ctx <span class="ot">=</span></span>
+<span id="cb22-77"><a href="#cb22-77" aria-hidden="true" tabindex="-1"></a>    check (mkVestingValidator (unsafeFromBuiltinData d) (unsafeFromBuiltinData r) (unsafeFromBuiltinData ctx))</span>
+<span id="cb22-78"><a href="#cb22-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-79"><a href="#cb22-79" aria-hidden="true" tabindex="-1"></a><span class="co">-- Compile the untyped validator to a Plutus Validator</span></span>
+<span id="cb22-80"><a href="#cb22-80" aria-hidden="true" tabindex="-1"></a><span class="ot">vestingValidator ::</span> <span class="dt">Validator</span></span>
+<span id="cb22-81"><a href="#cb22-81" aria-hidden="true" tabindex="-1"></a>vestingValidator <span class="ot">=</span> mkValidatorScript <span class="op">$$</span>(PlutusTx.compile [<span class="op">||</span> mkUntypedVestingValidator <span class="op">||</span>])</span>
+<span id="cb22-82"><a href="#cb22-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-83"><a href="#cb22-83" aria-hidden="true" tabindex="-1"></a><span class="co">-- Create a wrapped version to use within GeniusYield</span></span>
+<span id="cb22-84"><a href="#cb22-84" aria-hidden="true" tabindex="-1"></a><span class="ot">vestingAddress ::</span> <span class="dt">GYAddress</span></span>
+<span id="cb22-85"><a href="#cb22-85" aria-hidden="true" tabindex="-1"></a>vestingAddress <span class="ot">=</span> scriptAddress vestingValidator</span></code></pre></div>
 <p>Lastly, we have to build transaction bodies out of the skeletons,
 sign and submit. Here are the essential details (for the full-fledged
 version see <span class="citation">(Brujnes 2023b)</span>)</p>

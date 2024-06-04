@@ -469,14 +469,16 @@ tx-effect (ledger) = (legder \ inputs) + outputs
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="37" data-paginate="true" data-background-color="#fff" data-background-image="images/Cardano-RGB_Logo-Stack-Blue.png" data-theme="gaia" lang="en-CA" data-marpit-pagination="37" style="--paginate:true;--background-color:#fff;--background-image:images/Cardano-RGB_Logo-Stack-Blue.png;--theme:gaia;background-color:#fff;background-image:images/Cardano-RGB_Logo-Stack-Blue.png;background-position:center;background-repeat:no-repeat;background-size:cover;" data-marpit-pagination-total="48">
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-haskell"><span class="hljs-comment">-- implement business logic of Claim method</span>
-<span class="hljs-title">claimVestingBeneficiary</span> :: <span class="hljs-type">GYTxQueryMonad</span> m =&gt; <span class="hljs-type">GYPubKeyHash</span> -&gt; <span class="hljs-type">GYTxOutRef</span> -&gt; m (<span class="hljs-type">GYTxSkeleton</span> &#x27;<span class="hljs-type">PlutusV2</span>)
-<span class="hljs-title">claimVestingBeneficiary</span> beneficiary oref  = <span class="hljs-keyword">do</span>
+
+<span class="hljs-title">claimVestingBeneficiary</span> :: <span class="hljs-type">GYTxQueryMonad</span> m =&gt; <span class="hljs-type">GYTxInTxOutRef</span> -&gt; m (<span class="hljs-type">GYTxSkeleton</span> &#x27;<span class="hljs-type">PlutusV2</span>)
+<span class="hljs-title">claimVestingBeneficiary</span> oref  = <span class="hljs-keyword">do</span>
     slot &lt;- currentSlot
+    beneficiary &lt;- extractBeneficiary oref                  <span class="hljs-comment">-- gets beneficiary from inline datum</span>
     return $ isInvalidBefore slot &lt;&gt;                        <span class="hljs-comment">-- sets up the validity interval</span>
              mustBeSignedBy beneficiary &lt;&gt;                  <span class="hljs-comment">-- adds a required signatory</span>
              mustHaveInput <span class="hljs-type">GYTxIn</span>                           <span class="hljs-comment">-- adds input</span>
                 { gyTxInTxOutRef = oref
-                , gyTxInWitness  = <span class="hljs-type">GYTxInWitnessScript</span>      <span class="hljs-comment">-- specify parameters to consume input eutxo:</span>
+                , gyTxInWitness  = <span class="hljs-type">GYTxInWitnessScript</span>      <span class="hljs-comment">-- specify parameters to consume input eutxo: </span>
                     (<span class="hljs-type">GYInScript</span> $ vestingValidatorScript)   <span class="hljs-comment">-- script</span>
                     <span class="hljs-type">Nothing</span>                                 <span class="hljs-comment">-- inline datum</span>
                     <span class="hljs-type">Claim</span>                                   <span class="hljs-comment">-- redeemer</span>
@@ -487,14 +489,6 @@ tx-effect (ledger) = (legder \ inputs) + outputs
                 , gyTxOutDatum   = <span class="hljs-type">Nothing</span>                   <span class="hljs-comment">-- no datum</span>
                 , gyTxOutRefS    = <span class="hljs-type">Nothing</span>                   <span class="hljs-comment">-- no reference script</span>
                 }
-
-<span class="hljs-comment">-- Helper function to get the GYValue from a GYTxInTxOutRef</span>
-<span class="hljs-title">getValueFromTxOutRef</span> :: <span class="hljs-type">GYTxQueryMonad</span> m =&gt; <span class="hljs-type">GYTxInTxOutRef</span> -&gt; m (<span class="hljs-type">Maybe</span> <span class="hljs-type">GYValue</span>)
-<span class="hljs-title">getValueFromTxOutRef</span> txOutRef = <span class="hljs-keyword">do</span>
-    <span class="hljs-comment">-- Query the UTxO</span>
-    utxo &lt;- gyQueryUtxoAtTxOutRef txOutRef
-    <span class="hljs-comment">-- Extract the GYValue</span>
-    return $ fmap gyTxOutValue utxo
 </code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="38" data-paginate="true" data-background-color="#fff" data-background-image="images/Cardano-RGB_Logo-Stack-Blue.png" data-theme="gaia" lang="en-CA" data-marpit-pagination="38" style="--paginate:true;--background-color:#fff;--background-image:images/Cardano-RGB_Logo-Stack-Blue.png;--theme:gaia;background-color:#fff;background-image:images/Cardano-RGB_Logo-Stack-Blue.png;background-position:center;background-repeat:no-repeat;background-size:cover;" data-marpit-pagination-total="48">

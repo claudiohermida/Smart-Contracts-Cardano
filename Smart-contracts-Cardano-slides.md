@@ -459,14 +459,16 @@ We use Atlas (<https://atlas-app.io/>) to maintain the functional programming th
 ---
 ```haskell
 -- implement business logic of Claim method
-claimVestingBeneficiary :: GYTxQueryMonad m => GYPubKeyHash -> GYTxOutRef -> m (GYTxSkeleton 'PlutusV2)
-claimVestingBeneficiary beneficiary oref  = do
+
+claimVestingBeneficiary :: GYTxQueryMonad m => GYTxInTxOutRef -> m (GYTxSkeleton 'PlutusV2)
+claimVestingBeneficiary oref  = do
     slot <- currentSlot
+    beneficiary <- extractBeneficiary oref                  -- gets beneficiary from inline datum
     return $ isInvalidBefore slot <>                        -- sets up the validity interval
              mustBeSignedBy beneficiary <>                  -- adds a required signatory
              mustHaveInput GYTxIn                           -- adds input
                 { gyTxInTxOutRef = oref
-                , gyTxInWitness  = GYTxInWitnessScript      -- specify parameters to consume input eutxo:
+                , gyTxInWitness  = GYTxInWitnessScript      -- specify parameters to consume input eutxo: 
                     (GYInScript $ vestingValidatorScript)   -- script
                     Nothing                                 -- inline datum
                     Claim                                   -- redeemer
@@ -477,14 +479,6 @@ claimVestingBeneficiary beneficiary oref  = do
                 , gyTxOutDatum   = Nothing                   -- no datum
                 , gyTxOutRefS    = Nothing                   -- no reference script
                 }
-
--- Helper function to get the GYValue from a GYTxInTxOutRef
-getValueFromTxOutRef :: GYTxQueryMonad m => GYTxInTxOutRef -> m (Maybe GYValue)
-getValueFromTxOutRef txOutRef = do
-    -- Query the UTxO
-    utxo <- gyQueryUtxoAtTxOutRef txOutRef
-    -- Extract the GYValue
-    return $ fmap gyTxOutValue utxo
 ```
 ---
 ```haskell

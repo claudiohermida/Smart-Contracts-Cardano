@@ -560,14 +560,13 @@ One attractive feature of Atlas is that it provides a modular way of building tr
 
 Let us see the relevant transaction schemas for our example Vesting contract (we use *inline datums*<sup><span class="citation">(Peyton Jones 2021a)</span></sup>):
 
-``` haskell
-
-
-
+```haskell
 -- implement business logic of Claim method
-claimVestingBeneficiary :: GYTxQueryMonad m => GYPubKeyHash -> GYTxOutRef -> m (GYTxSkeleton 'PlutusV2)
-claimVestingBeneficiary beneficiary oref  = do
+
+claimVestingBeneficiary :: GYTxQueryMonad m => GYTxInTxOutRef -> m (GYTxSkeleton 'PlutusV2)
+claimVestingBeneficiary oref  = do
     slot <- currentSlot
+    beneficiary <- extractBeneficiary oref                  -- gets beneficiary from inline datum
     return $ isInvalidBefore slot <>                        -- sets up the validity interval
              mustBeSignedBy beneficiary <>                  -- adds a required signatory
              mustHaveInput GYTxIn                           -- adds input
@@ -583,7 +582,7 @@ claimVestingBeneficiary beneficiary oref  = do
                 , gyTxOutDatum   = Nothing                   -- no datum
                 , gyTxOutRefS    = Nothing                   -- no reference script
                 }
-       
+
 
 -- Helper function to get the GYValue from a GYTxInTxOutRef
 getValueFromTxOutRef :: GYTxQueryMonad m => GYTxInTxOutRef -> m (Maybe GYValue)
@@ -593,11 +592,31 @@ getValueFromTxOutRef txOutRef = do
     -- Extract the GYValue
     return $ fmap gyTxOutValue utxo
 
+ -- Helper function to get GYPubKeyHash of beneficiary out of a GYTxInTxOutRef with inline datum
+extractBeneficiary ::    GYTxQueryMonad m => GYTxInTxOutRef -> m (Maybe GYPubKeyHash)
+ extractBeneficiary txOutRef = do
+        utxo <- gyQueryUtxoAtTxOutRef txOutRef
+        dat <- inlineDatum utxo
+        return $ extractBeneficiaryFromDatum dat
+
+-- Function to extract the beneficiary from the given datum
+
+extractBeneficiaryFromDatum :: GYDatum -> Maybe GYPubKeyHash
+extractBeneficiaryFromDatum (GYDatum d) = do
+    VestingDatum {..} <- fromBuiltinData d
+    toGYPubKeyHash $ Just beneficiary
+
+-- Function to extract inline datum from a utxo
+inlineDatum :: GYUTxO -> Maybe GYDatum 
+inlineDatum utxo@GYUTxO{utxoOutDatum} = case utxoOutDatum of 
+                                    GYOutDatumInline gyDatum -> Just gyDatum
+                                    _                        -> Nothing
 
 -- implement business logic of Cancel method
-cancelVestingBenefactor :: GYTxQueryMonad m => GYPubKeyHash -> GYTxOutRef -> m (GYTxSkeleton 'PlutusV2)
-cancelVesting benefactor oref  = do
+cancelVestingBenefactor :: GYTxQueryMonad m => GYTxOutRef -> m (GYTxSkeleton 'PlutusV2)
+cancelVesting  oref  = do
     slot <- currentSlot
+    benefactor <- extractBenefactor oref                      -- gets benefactor from inline datum
     return $ isInvalidAfter slot <>                           -- sets up the validity interval
              mustBeSignedBy benefactor <>                     -- adds a required signatory
              mustHaveInput GYTxIn                             -- adds input ... similar to claimVestingBeneficiary
