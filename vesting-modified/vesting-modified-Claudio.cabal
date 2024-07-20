@@ -83,16 +83,6 @@ executable place-vesting
     , text
     , vesting:vesting-offchain
 
--- executable retrieve-vesting
---   import:           common
---   hs-source-dirs:   app
---   main-is:          retrieve.hs
---   ghc-options:
---     -O2 -threaded -rtsopts -with-rtsopts=-T
---   build-depends:
---     , base
---     , atlas-cardano
---     , vesting:vesting-offchain
 
 executable claim
   import:           common
