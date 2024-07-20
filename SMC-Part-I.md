@@ -20,7 +20,7 @@
 > >     contract in Cardano?
 >
 > This is the first in a three-part series covering these topics. The
-> other parts are (SMC-PartII) and (SMC-PartIII). The whole article is presented in this YouTube video 
+> other parts are <https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-II.md> and <https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-III.md>. The whole article is presented in this YouTube video 
 > 
 > 
 > <https://www.youtube.com/watch?v=cUu-7FDV0wI?si=cSD8uurYBGDYs7vL>
