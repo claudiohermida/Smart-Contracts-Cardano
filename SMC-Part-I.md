@@ -50,9 +50,9 @@ unspent transaction output* (which additionally enhances data to a
 the *State Monad* and show its equivalence to the
 additional-(input/output) method.
 
-The second part (SMC-PartII) of this work examines the link between
+The second part <https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-II.md> of this work examines the link between
 formal specifications of methods via pre and postconditions and
-Cardano’s validators, while the third part (SMC-PartIII) addresses the
+Cardano’s validators, while the third part <https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-III.md> addresses the
 link between smart contract methods, transaction schemas and their
 associated validators, rounding up our treatment of smart contracts in
 Cardano.
