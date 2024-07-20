@@ -34,7 +34,7 @@
 
 # Introduction
 
-In the first part (SMC-PartI) of this series we recalled how functional
+In the first part <https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-I.md> of this series we recalled how functional
 programming handles state and its relevance to understand Cardano’s
 eutxo model.
 
@@ -54,7 +54,7 @@ use as *validators* for the corresponding *redeemer* method. We
 illustrate these notions with our guiding example of a Solidity smart
 contract implementing a *Vesting* escrow.
 
-The third part (SMC-PartIII) of this series addresses the relation of
+The third part <https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-III.md> of this series addresses the relation of
 smart contract methods and their off-chain counterpart via transaction
 schemas, and rounds up our treatment of smart contracts, including their
 deployment.
