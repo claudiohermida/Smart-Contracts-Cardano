@@ -1,0 +1,14 @@
+{
+  "haskell.toolchain": {
+    "cabal": "cabal",
+    "stack": "stack",
+    "ghcup": "ghcup"
+  },
+  "haskell.formattingProvider": "ormolu",
+  "haskell.manageHLS": "GHCup",
+  "haskell.serverExecutablePath": "haskell-language-server-wrapper",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  }
+}

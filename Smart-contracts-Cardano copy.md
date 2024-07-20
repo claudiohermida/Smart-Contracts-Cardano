@@ -378,7 +378,7 @@ which is expressed in first-order logic as
     Spec(sortIncOrder) = forall l:List(Int). isSorted(sortIncOrder(l)) && isPermutation(l,sortIncOrder(l))
 ```
 
-- As another example consider the following piece from the ***Aiken stdlib*** <https://aiken-lang.github.io/stdlib/aiken/transaction/value.html> (we elaborate on Values later on <span id="noteValues">[Values](#Values)</span>):
+- As another example consider the following piece from the ***Aiken stdlib*** <https://aiken-lang.github.io/stdlib/aiken/transaction/value.html> (we elaborate on Values later on<span id="noteValues"><sup>[Values](#Values)</sup></span>):
 
   `from_asset_list(xs: List<(PolicyId, List<(AssetName, Int)>)>) -> Value`
 
@@ -751,7 +751,7 @@ The reason for putting the code in an eutxo is that the very simple model of led
 
 ### Reference Script CIP-33
 
-A reference-script utxo carries the code of the validator script in a special new field. It was also introduced by <span class="citation">[Peyton Jones 2021c](#ref-cip-33)</span> implemented in the Vasil hard-fork. It greatly simplifies the size of transactions which invoke this validator, as we can just refer to the given utxo rather than pass the whole piece of code each time we refer to it.[↩︎](#refscript)
+A reference-script utxo carries the code of the validator script in a special new field. It was also introduced by <span class="citation">Peyton Jones 2021c)</span> implemented in the Vasil hard-fork. It greatly simplifies the size of transactions which invoke this validator, as we can just refer to the given utxo rather than pass the whole piece of code each time we refer to it.[↩︎](#refscript)
 
 </div>
 

@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "haskell.haskell",  // Haskell extension by the Haskell Foundation
+    "justusadam.language-haskell",  // Haskell Syntax Highlighting
+    "alexcvzz.vscode-sqlite",  // Useful for database-related projects
+    "dbaeumer.vscode-eslint",  // For linting JavaScript (if relevant)
+    "esbenp.prettier-vscode",  // For formatting (if relevant)
+    "hoovercj.haskell-linter",  // Haskell linter
+    "haskell.haskell",  // Haskell Language Server
+    "rahulmutt.hsinspect"  // Keep the original recommendation
+  ]
+}
