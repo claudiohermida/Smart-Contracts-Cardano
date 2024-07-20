@@ -32,7 +32,7 @@ viewport: width=device-width, initial-scale=1
 > > - Provide a putative answer to the question: what is a smart contract in Cardano?
 
 This is third and final part of the three-part series covering these topics. The
-other parts are (SMC-PartI) and (SMC-PartII). The whole article is presented in this YouTube video
+other parts are <a href=https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-I.md>Part I</a> and <a href=https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-II.md>Part II</a>. The whole article is presented in this YouTube video
 >
 ><https://www.youtube.com/watch?v=cUu-7FDV0wI?si=cSD8uurYBGDYs7vL>
 
@@ -45,7 +45,7 @@ other parts are (SMC-PartI) and (SMC-PartII). The whole article is presented in 
 
 # Introduction
 
-In the first part (SMC-PartI) of this series we dealt with state in functional programming and its relevance to Cardano's eutxo model, while in the second part (SMC-PartII) we set up the correspondence of formal specification of methods via pre and postconditions with (on-chain) validators for the corresponding redeemers.
+In the first part <a href=https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-I.md>Part I</a> of this series we dealt with state in functional programming and its relevance to Cardano's eutxo model, while in the second part <a href=https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-II.md>Part II</a> we set up the correspondence of formal specification of methods via pre and postconditions with (on-chain) validators for the corresponding redeemers.
 
 In this final installment, we deal with the off-chain part of smart contract methods, namely the construction of transactions. To that end, we introduce the notion of *transaction schema* as a parameterized transaction body, and illustrate it with our guiding *Vesting* contract example. 
 
