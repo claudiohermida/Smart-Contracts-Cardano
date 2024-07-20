@@ -6,7 +6,7 @@
 >> - Exhibit Cardano's validators as verifiable specifications of a contract-method input-output behaviour
 >> - Provide a putative answer to the question: what is a smart contract in Cardano?
 
-For ease of presentation, we organize in three parts (posted on Medium https://medium.com/@claudio.hermida and this github repo https://github.com/claudiohermida/Smart-Contracts-Cardano):
+For ease of presentation, we organize the material in three parts (posted on Medium https://medium.com/@claudio.hermida and this github repo https://github.com/claudiohermida/Smart-Contracts-Cardano):
 
 >>   - Part I: Functional Programming and the eUTXO Model  https://medium.com/@claudio.hermida/smart-contracts-in-cardano-2ab2fc7de1aa
 >    We analyse state in the account-based model of smart contracts and reinterpret it in the functional context, obtaining eutxo data
