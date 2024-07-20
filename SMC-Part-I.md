@@ -20,7 +20,7 @@
 > >     contract in Cardano?
 >
 > This is the first in a three-part series covering these topics. The
-> other parts are <https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-II.md> and <https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-III.md>. The whole article is presented in this YouTube video 
+> other parts are <a href=https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-II.md>Part II</a> and <a href=https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-III.md>Part III</a>. The whole article is presented in this YouTube video 
 > 
 > 
 > <https://www.youtube.com/watch?v=cUu-7FDV0wI?si=cSD8uurYBGDYs7vL>
@@ -50,9 +50,9 @@ unspent transaction output* (which additionally enhances data to a
 the *State Monad* and show its equivalence to the
 additional-(input/output) method.
 
-The second part <https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-II.md> of this work examines the link between
+The second part <a href=https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-II.md>Part II</a> of this work examines the link between
 formal specifications of methods via pre and postconditions and
-Cardano’s validators, while the third part <https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-III.md> addresses the
+Cardano’s validators, while the third part <a href=https://github.com/claudiohermida/Smart-Contracts-Cardano/blob/main/SMC-Part-III.md>Part III</a> addresses the
 link between smart contract methods, transaction schemas and their
 associated validators, rounding up our treatment of smart contracts in
 Cardano.
