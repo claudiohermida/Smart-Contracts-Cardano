@@ -1,8 +1,4 @@
----
-generator: pandoc
-title: Functional-programming-and-eUTXO.knit
-viewport: width=device-width, initial-scale=1
----
+
 
 <div class="container-fluid main-container">
 
