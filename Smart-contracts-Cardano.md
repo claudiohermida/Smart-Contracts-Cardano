@@ -15,7 +15,7 @@ viewport: width=device-width, initial-scale=1
 # Smart Contracts in Cardano
 
 **Claudio Hermida**  
-<claudio.hermida@gmail.com>  
+<claudio.albherto.ermida@protonmail.com>  
 <https://www.linkedin.com/in/claudiohermida/>
 
 </div>
